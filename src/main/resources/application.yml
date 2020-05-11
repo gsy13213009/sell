@@ -1,0 +1,7 @@
+#logging:
+#  pattern:
+#    console: "%d - %msg%n"
+#  file:
+#    name: /var/tmp/tomcat/sell.log
+#  level:
+#    root: info
