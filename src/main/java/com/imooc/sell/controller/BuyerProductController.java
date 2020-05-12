@@ -4,6 +4,7 @@ import com.imooc.sell.dataobject.ProductCategory;
 import com.imooc.sell.dataobject.ProductInfo;
 import com.imooc.sell.service.CategoryService;
 import com.imooc.sell.service.ProductService;
+import com.imooc.sell.utils.ResultVOUtil;
 import com.imooc.sell.vo.ProductInfoVO;
 import com.imooc.sell.vo.ProductVO;
 import com.imooc.sell.vo.ResultVO;
@@ -28,7 +29,6 @@ public class BuyerProductController {
 
     @GetMapping("/list")
     public ResultVO list() {
-        ResultVO<Object> objectResultVO = new ResultVO<>();
         // 1. 查询所有上架商品
         List<ProductInfo> productInfoList = productService.findUpAll();
 
@@ -62,11 +62,7 @@ public class BuyerProductController {
             productVOList.add(productVO);
         }
 
-        objectResultVO.setCode(0);
-        objectResultVO.setMsg("成功");
-        objectResultVO.setData(productVOList);
-
-        return objectResultVO;
+        return ResultVOUtil.success(productVOList);
     }
 
 }
