@@ -2,13 +2,17 @@ package com.imooc.sell.service.impl;
 
 import com.imooc.sell.dataobject.OrderDetail;
 import com.imooc.sell.dto.OrderDTO;
+import com.imooc.sell.enums.OrderStatusEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -46,14 +50,24 @@ class OrderServiceImplTest {
 
     @Test
     void findOne() {
+        OrderDTO one = orderService.findOne("1589301857026152981");
+        Assert.assertNotNull(one);
+        log.info(one.toString());
     }
 
     @Test
     void findList() {
+        PageRequest request = PageRequest.of(0, 1);
+        Page<OrderDTO> orderDTOPage = orderService.findList("abc123", request);
+        Assert.assertNotEquals(0, orderDTOPage.getTotalElements());
     }
 
     @Test
     void cancel() {
+        OrderDTO one = orderService.findOne("1589301857026152981");
+        OrderDTO cancel = orderService.cancel(one);
+        log.info(cancel.toString());
+        Assert.assertEquals(OrderStatusEnum.CANCEL.getCode(), cancel.getOrderStatus());
     }
 
     @Test
