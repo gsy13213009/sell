@@ -3,6 +3,7 @@ package com.imooc.sell.service.impl;
 import com.imooc.sell.dataobject.OrderDetail;
 import com.imooc.sell.dto.OrderDTO;
 import com.imooc.sell.enums.OrderStatusEnum;
+import com.imooc.sell.enums.PayStatusEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -79,5 +80,8 @@ class OrderServiceImplTest {
 
     @Test
     void paid() {
+        OrderDTO one = orderService.findOne("1589301857026152981");
+        orderService.paid(one);
+        Assert.assertEquals(PayStatusEnum.SUCCESS.getCode(), one.getPayStatus());
     }
 }
