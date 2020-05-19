@@ -24,7 +24,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
-        Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid("abc123", PageRequest.of(0, 1));
+        Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
         List<OrderDTO> result = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
         return new PageImpl<>(result, pageable, orderMasterPage.getTotalElements());
     }
@@ -168,7 +167,7 @@ public class OrderServiceImpl implements OrderService {
         OrderMaster save = orderMasterRepository.save(orderMaster);
         if (save == null) {
             log.error("【订单支付完成】更新失败， orderMaster ={}", orderMaster);
-           throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
+            throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
         }
         return orderDTO;
     }
