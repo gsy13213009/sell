@@ -68,8 +68,8 @@ public class OrderServiceImpl implements OrderService {
         //3. 写入订单数据（orderMaster和orderDetail）
         OrderMaster orderMaster = new OrderMaster();
         // 必须先拷贝，否则会将原来的值覆盖了
+        orderDTO.setOrderId(orderId);
         BeanUtils.copyProperties(orderDTO, orderMaster);
-        orderMaster.setOrderId(orderId);
         orderMaster.setOrderAmount(orderAmount);
         // 必须写回去，因为copyProperties后status被覆盖为null了
         orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
