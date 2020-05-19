@@ -72,6 +72,9 @@ class OrderServiceImplTest {
 
     @Test
     void finish() {
+        OrderDTO one = orderService.findOne("1589301857026152981");
+        orderService.finish(one);
+        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(), one.getOrderStatus());
     }
 
     @Test

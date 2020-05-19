@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
         List<CartDTO> collect = orderDTO.getOrderDetails().stream().map(e -> new CartDTO(e.getProductId(), e.getProductQuantity())).collect(Collectors.toList());
         productService.increaseStock(collect);
         // 如果已支付，需要退款
-        if (orderMaster.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())){
+        if (orderMaster.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
             // TODO gsy 退款
         }
         return orderDTO;
@@ -136,7 +136,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO finish(OrderDTO orderDTO) {
-        return null;
+        // 订单状态
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            log.error("[完成订单]: 订单状态不正确, orderId={}, orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
+        // 修改状态
+        orderDTO.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
+        OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDTO, orderMaster);
+        OrderMaster save = orderMasterRepository.save(orderMaster);
+        if (save == null) {
+            log.error("[完结订单] 更新失败， orderMaster = {}", orderMaster);
+            throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
+        }
+        return orderDTO;
     }
 
     @Override
