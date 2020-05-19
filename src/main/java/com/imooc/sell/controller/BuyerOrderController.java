@@ -62,6 +62,15 @@ public class BuyerOrderController {
         return ResultVOUtil.success(list.getContent());
     }
     // 订单详情
+    @PostMapping("/detail")
+    public ResultVO<OrderDTO> detail(@RequestParam("orderId") String orderId) {
+        if (StringUtils.isEmpty(orderId)) {
+            throw new SellException(-1, "参数错误");
+        }
+        // TODO 不安全，需要验证权限
+        OrderDTO one = orderService.findOne(orderId);
+        return ResultVOUtil.success(one);
+    }
     // 取消订单
 
 }
