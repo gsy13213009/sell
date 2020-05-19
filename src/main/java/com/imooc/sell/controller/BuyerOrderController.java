@@ -5,6 +5,7 @@ import com.imooc.sell.dto.OrderDTO;
 import com.imooc.sell.exception.SellException;
 import com.imooc.sell.form.OrderForm;
 import com.imooc.sell.service.OrderService;
+import com.imooc.sell.service.impl.BuyServiceImpl;
 import com.imooc.sell.utils.ResultVOUtil;
 import com.imooc.sell.vo.ResultVO;
 import java.util.HashMap;
@@ -30,6 +31,9 @@ public class BuyerOrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private BuyServiceImpl buyService;
 
     // 创建订单
     @PostMapping("/create")
@@ -61,24 +65,25 @@ public class BuyerOrderController {
         Page<OrderDTO> list = orderService.findList(openid, request);
         return ResultVOUtil.success(list.getContent());
     }
+
     // 订单详情
     @PostMapping("/detail")
-    public ResultVO<OrderDTO> detail(@RequestParam("orderId") String orderId) {
+    public ResultVO<OrderDTO> detail(@RequestParam("openId") String openId, @RequestParam("orderId") String orderId) {
         if (StringUtils.isEmpty(orderId)) {
             throw new SellException(-1, "参数错误");
         }
-        // TODO 不安全，需要验证权限
-        OrderDTO one = orderService.findOne(orderId);
-        return ResultVOUtil.success(one);
+        // 使用service处理，简洁
+        OrderDTO orderOne = buyService.findOrderOne(openId, orderId);
+        return ResultVOUtil.success(orderOne);
     }
+
     // 取消订单
     @PostMapping("/cancel")
-    public ResultVO cancel(@RequestParam("orderId") String orderId) {
+    public ResultVO cancel(@RequestParam("openId") String openId, @RequestParam("orderId") String orderId) {
         if (StringUtils.isEmpty(orderId)) {
             throw new SellException(-1, "参数错误");
         }
-        OrderDTO one = orderService.findOne(orderId);
-        orderService.cancel(one);
+        buyService.cancelOrder(openId, orderId);
         return ResultVOUtil.success();
     }
 
