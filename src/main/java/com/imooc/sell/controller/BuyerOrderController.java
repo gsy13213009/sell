@@ -72,5 +72,14 @@ public class BuyerOrderController {
         return ResultVOUtil.success(one);
     }
     // 取消订单
+    @PostMapping("/cancel")
+    public ResultVO cancel(@RequestParam("orderId") String orderId) {
+        if (StringUtils.isEmpty(orderId)) {
+            throw new SellException(-1, "参数错误");
+        }
+        OrderDTO one = orderService.findOne(orderId);
+        orderService.cancel(one);
+        return ResultVOUtil.success();
+    }
 
 }
