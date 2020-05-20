@@ -18,7 +18,7 @@ public class PayServiceImpl {
     @Autowired
     private WechatPayConfig wechatPayConfig;
 
-    public void create(OrderDTO orderDTO) {
+    public PayResponse create(OrderDTO orderDTO) {
         BestPayServiceImpl bestPayService = wechatPayConfig.bestPayService();
         PayRequest payRequest = new PayRequest();
         payRequest.setOpenid(orderDTO.getOrderId());
@@ -29,5 +29,6 @@ public class PayServiceImpl {
         log.info("[微信支付] request = {}", JsonUtil.toJson(payRequest));
         PayResponse pay = bestPayService.pay(payRequest);
         log.info("[微信支付] response = {}", pay);
+        return pay;
     }
 }
