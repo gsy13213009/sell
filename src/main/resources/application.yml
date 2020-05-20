@@ -23,3 +23,7 @@ server:
 wechat:
   mpAppId: wxb9ba7c646ff42844
   mpAppSecret: ace6c76efef1a20b49f1472757c08ed0
+  mchId: 1409146202
+  mchKey: c976503d34ca432c601361f969fd8d85
+  keyPath: /var/weixin_cert/h5.p12
+  notifyUrl: http://test.zgjyjn.net/sell/pay/notify
