@@ -10,6 +10,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -53,9 +55,11 @@ public class PayController {
         return new ModelAndView("pay/create", map);
     }
 
-    @GetMapping("/notify")
-    public void payNotify() {
-
+    @PostMapping("/notify")
+    public ModelAndView payNotify(@RequestBody String notifyData) {
+        PayResponse notify = payService.notify(notifyData);
+        // 返回处理结果给微信
+        return new ModelAndView("pay/success");
     }
 
 }
