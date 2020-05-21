@@ -41,6 +41,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMasterRepository orderMasterRepository;
 
+    @Autowired
+    private PayServiceImpl payService;
+
     @Override
     @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
@@ -129,6 +132,7 @@ public class OrderServiceImpl implements OrderService {
         // 如果已支付，需要退款
         if (orderMaster.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
             // TODO gsy 退款
+            payService.refund(orderDTO);
         }
         return orderDTO;
     }
