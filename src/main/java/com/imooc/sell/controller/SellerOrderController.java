@@ -1,6 +1,7 @@
 package com.imooc.sell.controller;
 
 import com.imooc.sell.dto.OrderDTO;
+import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.service.OrderService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,20 @@ public class SellerOrderController {
         map.put("currentPage", page);
         map.put("size", size);
         return new ModelAndView("order/list", map);
+    }
+
+    @GetMapping("/cancel")
+    public ModelAndView cancel(@RequestParam("orderId") String orderId, Map<String, Object> map) {
+        try {
+            OrderDTO one = orderService.findOne(orderId);
+            orderService.cancel(one);
+        } catch (Exception e) {
+            map.put("msg", ResultEnum.ORDER_NOT_EXIST.getMessage());
+            map.put("url", "/sell/seller/order/list");
+            return new ModelAndView("common/error", map);
+        }
+        map.put("msg", "取消订单成功");
+        map.put("url", "/sell/seller/order/list");
+        return new ModelAndView("common/success", map);
     }
 }
