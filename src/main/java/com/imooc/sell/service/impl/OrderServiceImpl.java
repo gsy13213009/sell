@@ -107,6 +107,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<OrderDTO> findList(Pageable pageable) {
+        Page<OrderMaster> masterPage = orderMasterRepository.findAll(pageable);
+        List<OrderDTO> convert = OrderMaster2OrderDTOConverter.convert(masterPage.getContent());
+        return new PageImpl<>(convert, pageable, masterPage.getTotalElements());
+    }
+
+    @Override
     public OrderDTO cancel(OrderDTO orderDTO) {
         // 判断订单状态
         if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {

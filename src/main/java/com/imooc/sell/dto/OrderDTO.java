@@ -1,7 +1,11 @@
 package com.imooc.sell.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.sell.dataobject.OrderDetail;
+import com.imooc.sell.enums.OrderStatusEnum;
+import com.imooc.sell.enums.PayStatusEnum;
+import com.imooc.sell.utils.EnumUtil;
 import com.imooc.sell.utils.serializer.Date2LogSerializer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,4 +35,14 @@ public class OrderDTO {
     private Date updateTime;
 
     List<OrderDetail> orderDetails = new ArrayList<>(); // 如果有默认值，则返回值会是[]
+
+    @JsonIgnore // 将对象返回给前端时忽略该字段
+    public OrderStatusEnum getOrderStatusEnum() {
+        return EnumUtil.getByCode(orderStatus, OrderStatusEnum.class);
+    }
+
+    @JsonIgnore
+    public PayStatusEnum getPayStatusEnum() {
+        return EnumUtil.getByCode(payStatus, PayStatusEnum.class);
+    }
 }
