@@ -47,4 +47,18 @@ public class SellerOrderController {
         map.put("url", "/sell/seller/order/list");
         return new ModelAndView("common/success", map);
     }
+
+    @GetMapping("/detail")
+    public ModelAndView detail(@RequestParam("orderId") String orderId, Map<String, Object> map) {
+        OrderDTO one;
+        try {
+            one = orderService.findOne(orderId);
+        } catch (Exception e) {
+            map.put("msg", ResultEnum.ORDER_NOT_EXIST.getMessage());
+            map.put("url", "/sell/seller/order/list");
+            return new ModelAndView("common/error", map);
+        }
+        map.put("orderDTO", one);
+        return new ModelAndView("order/detail", map);
+    }
 }
