@@ -5,7 +5,7 @@
 <div id="wrapper" class="toggled">
 
     <#--边栏sidebar-->
-<#--    <#include "../common/nav.ftlh">-->
+    <#include "../common/nav.ftlh">
 
     <#--主要内容content-->
     <div id="page-content-wrapper">
