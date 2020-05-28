@@ -11,7 +11,7 @@ public class SellerServiceImpl {
     @Autowired
     private SellerInfoRepository repository;
 
-    SellerInfo findSellerInfoByOpenid(String openid) {
+    public SellerInfo findSellerInfoByOpenid(String openid) {
         return repository.findByOpenid(openid);
     }
 
