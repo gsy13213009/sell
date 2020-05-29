@@ -47,6 +47,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     PushMessage pushMessage;
 
+    @Autowired
+    WebSocket webSocket;
+
     @Override
     @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
@@ -83,6 +86,10 @@ public class OrderServiceImpl implements OrderService {
         //4. 扣库存
         List<CartDTO> cartDTOList = orderDTO.getOrderDetails().stream().map(e -> new CartDTO(e.getProductId(), e.getProductQuantity())).collect(Collectors.toList());
         productService.decreaseStock(cartDTOList);
+
+        // 发送webSocket消息
+        webSocket.sendMessage(orderId);
+
         return orderDTO;
     }
 
