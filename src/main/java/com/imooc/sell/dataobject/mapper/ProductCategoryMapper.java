@@ -45,4 +45,7 @@ public interface ProductCategoryMapper {
 
     @Delete("delete from product_category where category_type = #{type}")
     int deleteByCategoryType(Integer type);
+
+    // 使用xml的方式，不用注解
+    ProductCategory selectByCategoryType(Integer categoryType);
 }
