@@ -4,10 +4,15 @@ import com.imooc.sell.exception.SellException;
 import com.imooc.sell.utils.KeyUtil;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SecKillService {
+
+    private static final int TIMEOUT = 10 * 1000;
+    @Autowired
+    private RedisLock redisLock;
 
     static Map<String, Integer> sProducts;
     static Map<String, Integer> stock;
@@ -32,17 +37,22 @@ public class SecKillService {
         return queryMap(productId);
     }
 
-    /**
-     * 加上synchronized, 保证多线程运行不会有问题，也可以是查询数据库，mysql是行级锁
-     */
-    public synchronized void orderProductMockDiffUser(String productId) {
+    public void orderProductMockDiffUser(String productId) {
+        // 加锁
+        long time = System.currentTimeMillis() + TIMEOUT;
+        boolean lock = redisLock.lock(productId, String.valueOf(time));
+        if (!lock) {
+            // 没获取到锁
+            throw new SellException(101, "哎哟喂，人也太多了，换个姿势再试试");
+        }
+
         // 1. 查询该商品库存，为0 则活动结束
         int stockNum = stock.get(productId);
         if (stockNum == 0) {
             throw new SellException(100, "活动结束");
         } else {
             orders.put(KeyUtil.genUniqueKey(), productId);
-            stockNum = stockNum -1;
+            stockNum = stockNum - 1;
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -50,6 +60,9 @@ public class SecKillService {
             }
             stock.put(productId, stockNum);
         }
+
+        // 解锁
+        redisLock.unlock(productId, String.valueOf(time));
 
     }
 }
