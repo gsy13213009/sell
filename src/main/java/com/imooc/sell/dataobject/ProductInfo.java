@@ -2,6 +2,7 @@ package com.imooc.sell.dataobject;
 
 //import javax.persistence.Table;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,8 +17,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @DynamicUpdate // 动态更新时间
 @Data // lombok 提供，简化toString以及set/get
-public class ProductInfo {
+public class ProductInfo implements Serializable {
 
+    private static final long serialVersionUID = -9164614871839181961L;
     @Id
     private String productId;
     private String productName;

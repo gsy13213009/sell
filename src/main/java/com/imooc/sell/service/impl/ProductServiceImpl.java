@@ -15,12 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+//@CacheConfig(cacheNames = "product")
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductInfoRepository repository;
 
     @Override
+//    @Cacheable(key = "123") // 如果key不填的话 ，默认就是参数，该参数是productId
     public ProductInfo findOne(String productId) {
         return repository.findById(productId).orElse(null);
     }
@@ -36,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+//    @CachePut(key = "123")
     public ProductInfo save(ProductInfo productInfo) {
         return repository.save(productInfo);
     }

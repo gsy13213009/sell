@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,7 +30,19 @@ public class BuyerProductController {
     private CategoryService categoryService;
 
     @GetMapping("/list")
-    public ResultVO list() {
+    // redis的缓存，此注解会将resultVO缓存到redis里面，再次调用词接口时，就不会再查询数据库
+    // 直接从redis的缓存里面返回给前端
+    // key 可以指定为参数
+    // condition 指当满足条件时，才缓存
+    // unless，指，满足条件时，不缓存，也就是只有code为0才缓存
+    @Cacheable(cacheNames = "product", key = "#sellerId", condition = "#sellerId.length() > 3", unless = "#result.code != 0")
+
+    // @CacheEvict(cacheNames = "product", key = "123") // 将此注解放到save list 的接口上
+    // 保证当修改list后，删除redis的缓存，此时再次访问list接口便会从数据库读取
+
+    // @CachePut(cacheNames = "product", key = "123") // 此注解放到save list接口上时，会将
+    // save list接口的返回值写到redis里面，注意，save list的返回值需要是ResultVO，不能是其他
+    public ResultVO list(@RequestParam(value = "sellerId", defaultValue = "1") String sellerId) {
         // 1. 查询所有上架商品
         List<ProductInfo> productInfoList = productService.findUpAll();
 
