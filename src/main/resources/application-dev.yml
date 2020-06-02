@@ -1,0 +1,43 @@
+#logging:
+#  pattern:
+#    console: "%d - %msg%n"
+#  file:
+#    name: /var/tmp/tomcat/sell.log
+#  level:
+#    root: info
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.3.154/sell?characterEncoding=utf-8&useSSL=false
+  jpa:
+    show-sql: true
+  jackson:
+    default-property-inclusion: non_null # 全局配置：不返回null的对象
+  redis:
+    host: 192.168.3.154
+    port: 6379
+server:
+  servlet:
+    context-path: /sell/
+  port: 8888
+
+wechat:
+  mpAppId: wxb9ba7c646ff42844
+  mpAppSecret: ace6c76efef1a20b49f1472757c08ed0
+  mchId: 1409146202
+  mchKey: c976503d34ca432c601361f969fd8d85
+  keyPath: /var/weixin_cert/h5.p12
+  notifyUrl: http://test.zgjyjn.net/sell/pay/notify
+
+project:
+  wechatMpAuthorize: http://localhost:8080
+  wechatOpenAuthorize: http://localhost:8080
+  sell: http://localhost:8080
+
+
+# 配置mybatis的xml的mapper文件的路径
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
